@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from tkinter import *
-from ToolTip import *
+from ToolTip.ToolTip import ToolTip
 
 
 ####################################################################################################
