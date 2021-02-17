@@ -29,8 +29,8 @@ class CanvasTextEdit:
         <Widget>         = required, Canvas widget whose Text you want to Edit
         <Canvas_>        = required, handle to canvas required to edit text
         <Root>           = required, handle to create entry field
-        <positionX>      = optional, X positoin entry field appears
-        <positionY>      = optional, Y position entry field appears
+        <positionX>      = optional, not currently used
+        <positionY>      = optional, not currently used
         <Text>           = optional, if scrollbar Y-axis
         <tooltipText>    = optional, text to display for edit window tooltip
 
@@ -41,7 +41,7 @@ class CanvasTextEdit:
 
     Entry_numberof_Spaces = 20
 
-    def __init__(self, Widget, Canvas_, Root, positionX, positionY, Text = "Default Text", tooltipText = "Enter to finish Editing" ):
+    def __init__(self, Widget, Canvas_, Root, positionX = 0, positionY = 0, Text = "Default Text", tooltipText = "Enter to finish Editing" ):
         """ CanvasTextTexit initalization, widget, canvas, Root, positionX and position Y are mandatory """
 
         self.Widget    = None                                                   # Handle to the Text widget in a Canvas that you want to edit
@@ -163,6 +163,8 @@ class CanvasTextEdit:
 
             if debugging == True: print("State 0")
 
+            self.Text = StringVar()
+
             self.Text = self.Canvas.itemcget(self.Widget, "text")               # Obtain the Text Widget Text
 
             if debugging == True: print(self.Text)
@@ -173,21 +175,33 @@ class CanvasTextEdit:
 
 
             self.entry = Entry(self.Root)                                       # Make a Text Entry Widget
+            self.entry.config(textvariable = self.Text)
+
+
 
             position = self.Canvas.bbox(self.Widget)                            # Determine the Widget Absolute Position
+                                                                                # position = x1, y1, x2, y2
             self.positionX = position[0]                                        # positionX actually self calculated
-            self.positionY = position[1]                                        # positionY actually self calculated
+            self.positionY = position[1]                                        # positionY acually self calculated
+
+                                                                                # how to get Get widget width?
+
+
+
 
             self.window = self.Canvas.create_window(self.positionX,             # Create a Window, top left corner at the top left
                                                     self.positionY,             # position of the original Canvas Text Widget
                                                     window = self.entry,
-                                                    anchor = NW)
+                                                    anchor = NW,
+                                                    width = len(self.Text)*5.5)
             self.Canvas.tkraise(self.window)                                    # Raise the Entry Widget to the Front or Top
             self.entry.focus()                                                  # Bring the Mouse Cursor to the Entry Widget
             self.entry.insert(0,                                                # Insert the Current Text into the Entry Widget
                               self.Text
                               +
                               CanvasTextEdit.Entry_numberof_Spaces*" ")         # Add some extra spaces on the end to ease of entry purpose (not required)
+            self.entry.icursor(0)
+
 
             self.window_ToolTip = ToolTip(self.entry, self.Root,                # Popup ToolTip giving instructions on how to finish editing
                                           text = "Enter to finish Editing")
@@ -202,6 +216,11 @@ class CanvasTextEdit:
             if debugging == True: print("State 1")
 
             self.Text = self.entry.get()                                        # Obtain current text
+            self.Text = self.Text.rstrip()
+            if debugging == True: print("Numberof characters: ", len(self.Text))
+
+            self.entry.config(width = len(self.Text))
+
             self.entry.delete(0, END)                                           # Delete text in Entry Widget
             self.Root.unbind(self.entry)                                        # Unbind enter from the Entry Widget
             self.window_ToolTip.canvas_widget_leave()                           # Delete ToolTip, prevent errors
