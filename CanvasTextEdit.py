@@ -52,6 +52,8 @@ class CanvasTextEdit:
         self.Text      = None                                                   # Text in the
         self.tooltipText = None
 
+        self.Width = None
+
 
         self.typetest(Widget, Canvas_, Root, Text, positionX, positionY,
                       tooltipText)                                              # Test the inputs, make sure they are valid
@@ -184,6 +186,10 @@ class CanvasTextEdit:
             self.positionX = position[0]                                        # positionX actually self calculated
             self.positionY = position[1]                                        # positionY acually self calculated
 
+
+
+
+
                                                                                 # how to get Get widget width?
 
 
@@ -193,7 +199,7 @@ class CanvasTextEdit:
                                                     self.positionY,             # position of the original Canvas Text Widget
                                                     window = self.entry,
                                                     anchor = NW,
-                                                    width = len(self.Text)*5.5)
+                                                    width =  len(self.Text)*5.5 )
             self.Canvas.tkraise(self.window)                                    # Raise the Entry Widget to the Front or Top
             self.entry.focus()                                                  # Bring the Mouse Cursor to the Entry Widget
             self.entry.insert(0,                                                # Insert the Current Text into the Entry Widget
@@ -218,6 +224,7 @@ class CanvasTextEdit:
             self.Text = self.entry.get()                                        # Obtain current text
             self.Text = self.Text.rstrip()
             if debugging == True: print("Numberof characters: ", len(self.Text))
+
 
             self.entry.config(width = len(self.Text))
 
